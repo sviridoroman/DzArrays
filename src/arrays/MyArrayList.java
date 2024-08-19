@@ -1,11 +1,14 @@
 package arrays;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 /**
  * Класс реализация структуры данных список.
  * @author Свиридо Роман.
  * @param <T> тип данных элементов списка.
  */
-public class MyArrayList<T> {
+public class MyArrayList<T> implements Iterable<T>{
 	
 	/**
 	 * Массив элементов списка.
@@ -181,5 +184,53 @@ public class MyArrayList<T> {
 		}
 		
 		return new MyArrayList(newList);
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return new MyArrayListIterator(list);
+	}
+
+	/**
+	 * класс имплементирующий интрефейс java.util.Iterator<T>.
+	 */
+	private class MyArrayListIterator implements Iterator<T> {
+
+		/**
+		 * Указатель на текущтй элемент списка.
+		 */
+		int index;
+
+		/**
+		 * Конструктор для создания итератора.
+		 * @param list массив типа <T>.
+		 */
+		public MyArrayListIterator(T[] list) {
+			index = 0;
+		}
+
+		/**
+		 * Метод проверяющий наличие элемента в списке.
+		 */
+		@Override
+		public boolean hasNext() {
+			return (index < list.length);
+		}
+
+		/**
+		 * Метод итерирующий следующий элемент.
+		 * В случае отсутствия элемента возвращает NoSuchElementException.
+		 */
+		@Override
+		public T next() {			
+			T data = list[index];
+			if (hasNext()) {
+				T element = list[index];
+				index++;
+				return element;
+			} else {
+				throw new NoSuchElementException();
+			}
+		}	
 	}
 }
