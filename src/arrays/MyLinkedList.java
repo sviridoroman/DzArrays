@@ -1,16 +1,19 @@
 package arrays;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 /**
  * Класс реализация структуры данных двусвязный список.
  * @author Свиридо Роман.
  * @param <T> тип данных элементов списка.
  */
-public class MyLinkedList<T> {
+public class MyLinkedList<T> implements Iterable<T>{
 	
 	/**
 	 * Класс содержащий данные элемента MyLinkedList и ссылки на следующий, и предыдущий элементы.
 	 */
-	private class Element {
+	class Element {
 		
 		/**
 		 * Данные элемента.
@@ -294,5 +297,52 @@ public class MyLinkedList<T> {
 		
 		newLinkedList.last = element;
 		return newLinkedList;
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return new MyLinkedListIterator(this);
+	}
+
+	/**
+	 * класс имплементирующий интрефейс java.util.Iterator<T>.
+	 */
+	private class MyLinkedListIterator implements Iterator<T> {
+
+		/**
+		 * Указатель на текущтй элемент списка.
+		 */
+		Element element;
+
+		/**
+		 * Конструктор для создания итератора.
+		 * @param list список типа <T>.
+		 */
+		public MyLinkedListIterator(MyLinkedList<T> list) {
+			element = list.first;
+		}
+
+		/**
+		 * Метод проверяющий наличие элемента в списке.
+		 */
+		@Override
+		public boolean hasNext() {
+			return (element != null);
+		}
+
+		/**
+		 * Метод итерирующий следующий элемент.
+		 * В случае отсутствия элемента возвращает NoSuchElementException.
+		 */
+		@Override
+		public T next() {			
+			T data = element.data;
+			if (hasNext()) {
+				element = element.next;
+				return data;
+			} else {
+				throw new NoSuchElementException();
+			}
+		}	
 	}
 }
