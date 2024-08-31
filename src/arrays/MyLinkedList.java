@@ -80,11 +80,24 @@ public class MyLinkedList<T> implements Iterable<T>{
 		}
 		else if (index >= totalLength) {
 			addLast(element);
-		} else {
+		} else if (index <= totalLength / 2){
 			Element newElement = new Element(element);
 			Element elementAtIndex = first;
 			for (int i = 0; i < totalLength - 1; i++) {
 				elementAtIndex = elementAtIndex.next;
+			}
+			Element prevElement = elementAtIndex.prev;
+			newElement.prev = prevElement;
+			newElement.next = elementAtIndex;
+			prevElement.next = newElement;
+			elementAtIndex.prev = newElement;
+			totalLength++;	
+		} 
+		else {
+			Element newElement = new Element(element);
+			Element elementAtIndex = last;
+			for (int i = totalLength - 1; i >= 0; i--) {
+				elementAtIndex = elementAtIndex.prev;
 			}
 			Element prevElement = elementAtIndex.prev;
 			newElement.prev = prevElement;
@@ -156,13 +169,24 @@ public class MyLinkedList<T> implements Iterable<T>{
 			throw new IndexOutOfBoundsException(index);
         }
 		
-		Element element = first;
-		
-		for (int i = 0; i < index; i++) {
-			element = element.next;
+		if (index <= totalLength / 2) {
+			Element element = first;
+			
+			for (int i = 0; i < index; i++) {
+				element = element.next;
+			}
+
+			return element.data;
+
+		} else {
+			Element element = last;
+			
+			for (int i = totalLength - 1; i >= 0; i--) {
+				element = element.prev;
+			}
+
+			return element.data;
 		}
-		
-		return element.data;
 		
 	}
 	
@@ -200,7 +224,7 @@ public class MyLinkedList<T> implements Iterable<T>{
 		
 		if (index == 0) {
 			removeFirst();
-		} else {
+		} else if (index <= totalLength / 2) {
 			Element element = first;
 			
 			for (int i = 0; i < index - 1; i++) {
@@ -208,6 +232,21 @@ public class MyLinkedList<T> implements Iterable<T>{
 			}
 			
 			element.next = element.next.next;
+			totalLength--;
+			
+			if (element.next == null) {
+				last = element;
+			}
+
+		} else {
+			Element element = last;
+			
+			for (int i = totalLength - 1; i >= 0; i--) {
+				element = element.prev;
+			}
+			
+			element.next = element.next.next;
+			element.next.prev = element;
 			totalLength--;
 			
 			if (element.next == null) {
